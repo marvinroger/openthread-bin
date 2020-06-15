@@ -11,3 +11,6 @@ cd openthread
 
 # Build
 make -f src/posix/Makefile-posix DAEMON=1
+
+# Compress
+tar -zcvf ./build.tar.gz -C ./output/posix/x86_64-unknown-linux-gnu .
