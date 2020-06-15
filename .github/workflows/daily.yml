@@ -8,15 +8,17 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-18.04, macos-10.15]
+        arch: [x86_64, aarch64]
     env:
-      OS: ${{ matrix.os }}
+      TARGET_OS: ${{ matrix.os }}
+      TARGET_ARCH: ${{ matrix.arch }}
 
     steps:
     - uses: actions/checkout@v2
 
-    - run: ./.github/assets/build.sh
+    - run: ./.github/assets/entrypoint.sh
 
     - uses: actions/upload-artifact@v2
       with:
-        name: build_${{ matrix.os }}
-        path: ./openthread/build.tar.gz
+        name: build_${{ matrix.os }}_${{ matrix.arch }}
+        path: ./build.tar.gz
