@@ -4,7 +4,7 @@ set -euxo pipefail
 
 # Determine how to build
 build_type="host"
-docker_image=""
+dockerfile_arch=""
 output_directory=""
 if [[ "$TARGET_OS" == macos* && "$TARGET_ARCH" == "aarch64" ]]
 then
@@ -15,7 +15,7 @@ then
 elif [[ "$TARGET_OS" == ubuntu* && "$TARGET_ARCH" == "aarch64" ]]
 then
     build_type="docker"
-    docker_image="arm64v8/ubuntu:18.04"
+    dockerfile_arch="aarch64"
     output_directory="aarch64-unknown-linux-gnu"
 elif [[ "$TARGET_OS" == ubuntu* ]]
 then
@@ -30,11 +30,12 @@ then
 else
     sudo apt update -y && sudo apt install -y qemu qemu-user-static
     docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    docker build -t ot_environment -f "./.github/assets/Dockerfile.$dockerfile_arch" .
     docker run \
         --workdir /github/workspace \
         --rm \
         -v "${PWD}:/github/workspace" \
-        -t "$docker_image" \
+        -t ot_environment \
         /bin/bash -c ./.github/assets/build.sh
 fi
 
