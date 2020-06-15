@@ -2,8 +2,6 @@
 
 set -euxo pipefail
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-
 # Determine how to build
 build_type="host"
 docker_image=""
@@ -28,7 +26,7 @@ git clone https://github.com/openthread/openthread.git
 
 if [[ "$build_type" == "host" ]]
 then
-    "$DIR/build.sh"
+    ./.github/assets/build.sh
 else
     sudo apt update -y && sudo apt install -y qemu qemu-user-static
     docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
@@ -37,7 +35,7 @@ else
         --rm \
         -v "${PWD}:/github/workspace" \
         -t "$docker_image" \
-        /bin/bash -c "$DIR/build.sh"
+        /bin/bash -c ./.github/assets/build.sh
 fi
 
 # Compress
