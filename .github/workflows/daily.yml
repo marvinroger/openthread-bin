@@ -4,7 +4,12 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, macos-10.15]
+    env:
+      OS: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v2
@@ -13,5 +18,5 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: build
-        path: ./build.tar.gz
+        name: build_${{ matrix.os }}
+        path: ./openthread/build.tar.gz
