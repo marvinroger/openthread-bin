@@ -37,7 +37,7 @@ else
         --rm \
         -v "${PWD}:/github/workspace" \
         -t "$docker_image" \
-        /bin/bash -c '"$DIR/build.sh"'
+        /bin/bash -c "$DIR/build.sh"
 fi
 
 # Compress
