@@ -1,6 +1,9 @@
 name: Daily build
 
-on: [push]
+on:
+  push:
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
   build:
@@ -15,11 +18,11 @@ jobs:
       TARGET_ARCH: ${{ matrix.arch }}
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - run: ./.github/assets/entrypoint.sh
+      - run: ./.github/assets/entrypoint.sh
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: build_${{ matrix.os }}_${{ matrix.arch }}
-        path: ./build.tar.gz
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build_${{ matrix.os }}_${{ matrix.arch }}
+          path: ./build.tar.gz
