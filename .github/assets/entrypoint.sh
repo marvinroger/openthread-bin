@@ -40,7 +40,7 @@ else
         --rm \
         -v "${PWD}:/github/workspace" \
         -t ot_environment \
-        /bin/bash -c ./.github/assets/build.sh "${build_type}"
+        /bin/bash -c './.github/assets/build.sh "$0"' "${build_type}"
 fi
 
 # Compress
