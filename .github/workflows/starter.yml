@@ -1,0 +1,65 @@
+name: Starter
+
+on:
+  push:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  start:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Get latest OpenThread commit
+        uses: actions/github-script@v2
+        id: get-openthread-commit
+        with:
+          script: |
+            const res = await github.repos.getCommit({
+              owner: 'openthread',
+              repo: 'openthread',
+              ref: 'master'
+            })
+
+            const { sha } = res.data
+
+            return {
+              sha,
+              short_sha: sha.substr(0, 7)
+            }
+
+      - name: Is it a commit we already built?
+        uses: actions/github-script@v2
+        id: is-commit-already-built
+        with:
+          script: |
+            const res = await github.repos.getLatestRelease({
+              ...github.context.repo
+            })
+
+            const { tag_name } = res.data
+
+            if (tag_name === 'build_${{ fromJson(steps.get-openthread-commit.outputs.result).sha }}') {
+              return { already_build: true }
+            }
+
+            return { already_build: false }
+
+      - name: Create Release
+        if: ${{ fromJson(steps.is-commit-already-built.outputs.result).already_built }} == false
+        uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: build_${{ fromJson(steps.get-openthread-commit.outputs.result).sha }}
+          release_name: OpenThread commit ${{ fromJson(steps.get-openthread-commit.outputs.result).sha }}
+          body: https://github.com/openthread/openthread/tree/${{ fromJson(steps.get-openthread-commit.outputs.result).sha }}
+
+      - name: Start build
+        if: ${{ fromJson(steps.is-commit-already-built.outputs.result).already_built }} == false
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          event-type: build
+          client-payload: '{"openthread_sha": "${{ fromJson(steps.get-openthread-commit.outputs.result).sha }}", "openthread_short_sha": "${{ fromJson(steps.get-openthread-commit.outputs.result).short_sha }}", "upload_url": "${{ steps.create_release.outputs.upload_url }}"}'
