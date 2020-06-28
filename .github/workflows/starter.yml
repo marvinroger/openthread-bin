@@ -40,10 +40,10 @@ jobs:
             const { tag_name } = res.data
 
             if (tag_name === 'build_${{ fromJson(steps.get-openthread-commit.outputs.result).sha }}') {
-              return { already_build: true }
+              return { already_built: true }
             }
 
-            return { already_build: false }
+            return { already_built: false }
 
       - name: Create Release
         if: ${{ fromJson(steps.is-commit-already-built.outputs.result).already_built }} == false
