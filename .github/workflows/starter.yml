@@ -46,7 +46,7 @@ jobs:
             return { already_built: false }
 
       - name: Create Release
-        if: ${{ fromJson(steps.is-commit-already-built.outputs.result).already_built }} == false
+        if: "!fromJson(steps.is-commit-already-built.outputs.result).already_built"
         uses: actions/create-release@v1
         id: create_release
         env:
@@ -57,7 +57,7 @@ jobs:
           body: https://github.com/openthread/openthread/tree/${{ fromJson(steps.get-openthread-commit.outputs.result).sha }}
 
       - name: Start build
-        if: ${{ fromJson(steps.is-commit-already-built.outputs.result).already_built }} == false
+        if: "!fromJson(steps.is-commit-already-built.outputs.result).already_built"
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
