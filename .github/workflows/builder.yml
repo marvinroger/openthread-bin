@@ -20,9 +20,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - run: ./.github/assets/entrypoint.sh
+      - name: Build
+        id: build
+        run: ./.github/assets/entrypoint.sh
 
       - name: Upload build
+        if: "!${{ steps.build.outputs.no_op }}"
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -9,7 +9,9 @@ dockerfile_arch=""
 output_directory=""
 if [[ "$TARGET_OS" == macos* && "$TARGET_ARCH" != "x86_64" ]]
 then
-    echo "No op" && exit 0
+    echo "No op"
+    echo "::set-output name=no_op::1"
+    exit 0
 elif [[ "$TARGET_OS" == macos* ]]
 then
     output_directory="x86_64-apple-darwin"
