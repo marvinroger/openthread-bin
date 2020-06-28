@@ -6,7 +6,7 @@ on:
     - cron: "0 0 * * *"
 
 jobs:
-  build:
+  prepare:
     runs-on: ubuntu-18.04
 
     steps:
@@ -15,7 +15,7 @@ jobs:
         id: get-openthread-commit
         with:
           script: |
-            const res = await octokit.repos.getCommit({
+            const res = await github.repos.getCommit({
               owner: 'openthread',
               repo: 'openthread',
               ref: 'master'
