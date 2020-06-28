@@ -26,7 +26,10 @@ then
     output_directory="x86_64-unknown-linux-gnu"
 fi
 
-git clone https://github.com/openthread/openthread.git
+git clone -n https://github.com/openthread/openthread.git
+pushd openthread
+git checkout "${OPENTHREAD_SHA}"
+popd
 
 if [[ "$env_type" == "host" ]]
 then
