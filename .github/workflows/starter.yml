@@ -34,7 +34,7 @@ jobs:
         with:
           script: |
             const res = await github.repos.getLatestRelease({
-              ...github.context.repo
+              ...context.repo
             })
 
             const { tag_name } = res.data
