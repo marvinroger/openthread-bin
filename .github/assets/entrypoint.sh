@@ -49,4 +49,4 @@ else
 fi
 
 # Compress
-tar -zcvf ./build.tar.gz -C "./openthread/output/${build_type}/${output_directory}" .
+tar -zcvf ./build.tar.gz -C "./openthread/output/${build_type}" .
