@@ -45,15 +45,19 @@ jobs:
 
             return { already_built: false }
 
+      - name: Get current date
+        id: get-date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
       - name: Create Release
         if: "!fromJson(steps.is-commit-already-built.outputs.result).already_built"
         uses: actions/create-release@v1
-        id: create_release
+        id: create-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: build_${{ fromJson(steps.get-openthread-commit.outputs.result).sha }}
-          release_name: OpenThread commit ${{ fromJson(steps.get-openthread-commit.outputs.result).sha }}
+          release_name: OpenThread (${{ steps.get-date.outputs.date }}) - commit ${{ fromJson(steps.get-openthread-commit.outputs.result).short_sha }}
           body: https://github.com/openthread/openthread/tree/${{ fromJson(steps.get-openthread-commit.outputs.result).sha }}
 
       - name: Start build
@@ -62,4 +66,4 @@ jobs:
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           event-type: build
-          client-payload: '{"openthread_sha": "${{ fromJson(steps.get-openthread-commit.outputs.result).sha }}", "openthread_short_sha": "${{ fromJson(steps.get-openthread-commit.outputs.result).short_sha }}", "upload_url": "${{ steps.create_release.outputs.upload_url }}"}'
+          client-payload: '{"openthread_sha": "${{ fromJson(steps.get-openthread-commit.outputs.result).sha }}", "openthread_short_sha": "${{ fromJson(steps.get-openthread-commit.outputs.result).short_sha }}", "upload_url": "${{ steps.create-release.outputs.upload_url }}"}'
