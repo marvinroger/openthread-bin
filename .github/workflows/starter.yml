@@ -18,7 +18,7 @@ jobs:
             const res = await github.repos.getCommit({
               owner: 'openthread',
               repo: 'openthread',
-              ref: 'master'
+              ref: 'main'
             })
 
             const { sha } = res.data
