@@ -27,7 +27,7 @@ build() {
 
 apply_workaround() {
     # We need to use the m4 from brew
-    if [[ "$TARGET_OS" == macos* ]]
+    if [[ "${TARGET_OS:-default}" == macos* ]]
     then
         PATH=$(brew --prefix m4)/bin:$PATH
         export PATH
