@@ -26,10 +26,11 @@ build() {
 }
 
 apply_workaround() {
-    # m4 seems to be missing in ./script/bootstrap
+    # We need to use the m4 from brew
     if [[ "$TARGET_OS" == macos* ]]
     then
-        brew install m4
+        PATH=$(brew --prefix m4)/bin:$PATH
+        export PATH
     fi
 }
 
